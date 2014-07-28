@@ -1586,7 +1586,7 @@ if (typeof Slick === "undefined") {
       }
 
       var oldH = h;
-      th = Math.max(options.rowHeight * numberOfRows, viewportH - scrollbarDimensions.height);
+      th = Math.max(options.rowHeight * numberOfRows, viewportH - (viewportHasHScroll ? scrollbarDimensions.height : 0));
       if (th < maxSupportedCssHeight) {
         // just one page
         h = ph = th;
