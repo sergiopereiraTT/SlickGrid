@@ -1771,7 +1771,7 @@ if (typeof Slick === "undefined") {
           // Retrieving the colspan from metadata again (not from cacheEntry)
           colspan = getColspan (row, i);
           if (metadata) {
-            columnData = metadata[columns[i].id] || metadata.columns[i];
+            columnData = metadata[columns[i].id] || metadata[i];
           }
 
           w = 0;
