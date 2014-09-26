@@ -1556,7 +1556,11 @@ if (typeof Slick === "undefined") {
       handleScroll();
       // Since the width has changed, force the render() to reevaluate virtually rendered cells.
       lastRenderedScrollLeft = -1;
-      render();
+      //render();
+      if (h_render) {
+        clearTimeout(h_render);
+      }
+      h_render = setTimeout(render, 200);
     }
 
     function updateRowCount() {
@@ -1576,7 +1580,7 @@ if (typeof Slick === "undefined") {
       // this helps avoid redundant calls to .removeRow() when the size of the data decreased by thousands of rows
       var l = dataLengthIncludingAddNew - 1;
       for (var i in rowsCache) {
-        if (i >= l) {
+        if (i > l) {
           removeRowFromCache(i);
         }
       }
@@ -1650,13 +1654,13 @@ if (typeof Slick === "undefined") {
 
       if (vScrollDir == -1) {
         range.top -= buffer;
-        range.bottom += minBuffer;
+        range.bottom += buffer;
       } else if (vScrollDir == 1) {
-        range.top -= minBuffer;
+        range.top -= buffer;
         range.bottom += buffer;
       } else {
-        range.top -= minBuffer;
-        range.bottom += minBuffer;
+        range.top -= buffer;
+        range.bottom += buffer;
       }
 
       range.top = Math.max(0, range.top);
@@ -1679,7 +1683,7 @@ if (typeof Slick === "undefined") {
           while (cacheEntry.cellRenderQueue.length) {
             var columnIdx = cacheEntry.cellRenderQueue.pop();
             cacheEntry.cellNodesByColumnIdx[columnIdx] = lastChild;
-            if (lastChild !== null) {
+            if (lastChild !== null){
                 lastChild = lastChild.previousSibling;
             }
           }
@@ -1965,13 +1969,14 @@ if (typeof Slick === "undefined") {
 
         if (Math.abs(lastRenderedScrollTop - scrollTop) > 20 ||
             Math.abs(lastRenderedScrollLeft - scrollLeft) > 20) {
-          if (options.forceSyncScrolling || (
+          /*if (options.forceSyncScrolling || (
               Math.abs(lastRenderedScrollTop - scrollTop) < viewportH &&
               Math.abs(lastRenderedScrollLeft - scrollLeft) < viewportW)) {
             render();
           } else {
             h_render = setTimeout(render, 50);
-          }
+          }*/
+          h_render = setTimeout(render, 200);
 
           trigger(self.onViewportChanged, {});
         }
