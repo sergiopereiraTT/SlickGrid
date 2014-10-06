@@ -193,11 +193,15 @@ if (typeof Slick === "undefined") {
 
       // calculate these only once and share between grid instances
       maxSupportedCssHeight = maxSupportedCssHeight || getMaxSupportedCssHeight();
-      scrollbarDimensions = scrollbarDimensions || measureScrollbar();
 
       options = $.extend({}, defaults, options);
       validateAndEnforceOptions();
       columnDefaults.width = options.defaultColumnWidth;
+      if(options.scrollbarDimensions){
+        scrollbarDimensions = options.scrollbarDimensions
+      }else{
+        scrollbarDimensions = scrollbarDimensions || measureScrollbar();
+      }
 
       columnsById = {};
       for (var i = 0; i < columns.length; i++) {
