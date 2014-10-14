@@ -407,7 +407,7 @@ if (typeof Slick === "undefined") {
       return options.fullWidthRows ? Math.max(rowWidth, availableWidth) : rowWidth;
     }
 
-    function updateCanvasWidth(forceColumnWidthsUpdate) {
+    function updateCanvasWidth(forceColumnWidthsUpdate, forceHeaderRowSpacerUpdate) {
       var oldCanvasWidth = canvasWidth;
       canvasWidth = getCanvasWidth();
 
@@ -418,7 +418,9 @@ if (typeof Slick === "undefined") {
         viewportHasHScroll = (canvasWidth > viewportW - scrollbarDimensions.width);
       }
 
-      $headerRowSpacer.width(canvasWidth + (viewportHasVScroll ? scrollbarDimensions.width : 0));
+      if(forceHeaderRowSpacerUpdate) {
+        $headerRowSpacer.width(canvasWidth + (viewportHasVScroll ? scrollbarDimensions.width : 0));
+      }
 
       if (canvasWidth != oldCanvasWidth || forceColumnWidthsUpdate) {
         applyColumnWidths();
@@ -871,7 +873,7 @@ if (typeof Slick === "undefined") {
                   invalidateAllRows();
                 }
               }
-              updateCanvasWidth(true);
+              updateCanvasWidth(true, true);
               render();
               trigger(self.onColumnsResized, {});
             });
@@ -1035,7 +1037,7 @@ if (typeof Slick === "undefined") {
       }
 
       applyColumnHeaderWidths();
-      updateCanvasWidth(true);
+      updateCanvasWidth(true, true);
       if (reRender) {
         invalidateAllRows();
         render();
@@ -1610,7 +1612,6 @@ if (typeof Slick === "undefined") {
 
       if (h !== oldH) {
         $canvas.css("height", h);
-        scrollTop = $viewport[0].scrollTop;
       }
 
       var oldScrollTopInRange = (scrollTop + offset <= th - viewportH);
@@ -1622,7 +1623,7 @@ if (typeof Slick === "undefined") {
         scrollTo(scrollTop + offset);
       } else {
         // scroll to bottom
-        scrollTo(th - viewportH);
+        scrollTo(th - viewportH + (viewportHasHScroll ? scrollbarDimensions.height : 0));
       }
 
       if (h != oldH && options.autoHeight) {
@@ -1632,7 +1633,7 @@ if (typeof Slick === "undefined") {
       if (options.forceFitColumns && oldViewportHasVScroll != viewportHasVScroll) {
         autosizeColumns();
       }
-      updateCanvasWidth(false);
+      updateCanvasWidth(false, oldViewportHasVScroll != viewportHasVScroll);
     }
 
     function getVisibleRange(viewportTop, viewportLeft) {
