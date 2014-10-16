@@ -1610,17 +1610,21 @@ if (typeof Slick === "undefined") {
         cj = (th - h) / (n - 1);
       }
 
+      var oldScrollTop = scrollTop;
+
       if (h !== oldH) {
         $canvas.css("height", h);
+        // if we are at the bottom of the grid and we remove a row, the scroll position will change.
+        scrollTop = Math.min(scrollTop, th - viewportH + (viewportHasHScroll ? scrollbarDimensions.height : 0));
       }
 
-      var oldScrollTopInRange = (scrollTop + offset <= th - viewportH);
+      var oldScrollTopInRange = (oldScrollTop + offset <= th - viewportH);
 
       if (th == 0 || scrollTop == 0) {
         page = offset = 0;
       } else if (oldScrollTopInRange) {
         // maintain virtual position
-        scrollTo(scrollTop + offset);
+        scrollTo(oldScrollTop + offset);
       } else {
         // scroll to bottom
         scrollTo(th - viewportH + (viewportHasHScroll ? scrollbarDimensions.height : 0));
