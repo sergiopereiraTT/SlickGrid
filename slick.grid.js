@@ -1058,11 +1058,13 @@ if (typeof Slick === "undefined") {
     }
 
     function applyColumnWidths() {
-      var w, rule;
+      var x = 0, w, rule;
       for (var i = 0; i < columns.length; i++) {
         w = columns[i].width;
 
-        $('.' + uid + ' .l' + i).css('width',  w - absoluteColumnMinWidth + 'px');
+        $('.' + uid + ' .l' + i).css('left', x);
+        $('.' + uid + ' .r' + i).css('right', (canvasWidth - x - w));
+        x += columns[i].width;
       }
     }
 
@@ -1353,7 +1355,7 @@ if (typeof Slick === "undefined") {
 
       stringArray.push("<div class='ui-widget-content " + rowCss + "' style='top:" + getRowTop(row) + "px; height:" + options.rowHeight + "px;'>");
 
-      var colspan, m, columnData, w, cellStyle;
+      var colspan, m, columnData, w, x = 0, cellStyle;
       for (var i = 0, ii = columns.length; i < ii; i++) {
         m = columns[i];
         if (metadata && metadata.columns) {
@@ -1366,7 +1368,8 @@ if (typeof Slick === "undefined") {
         for (var j = i; j <= i + colspan - 1; j++) {
           w += columns[j].width;
         }
-        cellStyle = 'width:' + (w-absoluteColumnMinWidth) + 'px;height:' + rowHeight + 'px';
+        cellStyle = 'left:' + x + 'px; right:' + (canvasWidth - x - w) + 'px; height:' + rowHeight + 'px;';
+        x += w;
 
         // Do not render cells outside of the viewport.
         if (columnPosRight[Math.min(ii - 1, i + colspan - 1)] > range.leftPx) {
