@@ -86,12 +86,19 @@ classes should alter those!
   width: 100%;
 }
 
-.slick-cell, .slick-headerrow-column {
+.slick-headerrow-column {
   position: absolute;
+  overflow: hidden;
+}
+
+.slick-cell {
+  display: inline-block;
+}
+
+.slick-cell, .slick-headerrow-column {
   border: 1px solid transparent;
   border-right: 1px dotted silver;
   border-bottom-color: silver;
-  overflow: hidden;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   vertical-align: middle;
