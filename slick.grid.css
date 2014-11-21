@@ -77,6 +77,7 @@ classes should alter those!
 
 .grid-canvas {
   position: relative;
+  overflow: hidden;
   outline: 0;
 }
 
@@ -84,14 +85,25 @@ classes should alter those!
   position: absolute;
   border: 0px;
   width: 100%;
+  white-space: nowrap;
+}
+
+.slick-headerrow-column {
+  position: absolute;
+  overflow: hidden;
+}
+
+.slick-cell {
+  display: inline-block;
 }
 
 .slick-cell, .slick-headerrow-column {
-  position: absolute;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
   border: 1px solid transparent;
   border-right: 1px dotted silver;
   border-bottom-color: silver;
-  overflow: hidden;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   vertical-align: middle;

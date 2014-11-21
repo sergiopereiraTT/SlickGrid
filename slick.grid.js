@@ -1049,8 +1049,8 @@ if (typeof Slick === "undefined") {
       var h;
       for (var i = 0, headers = $headers.children(), ii = headers.length; i < ii; i++) {
         h = $(headers[i]);
-        if (h.width() !== columns[i].width - headerColumnWidthDiff) {
-          h.width(columns[i].width - headerColumnWidthDiff);
+        if (h.outerWidth() !== columns[i].width - headerColumnWidthDiff) {
+          h.outerWidth(columns[i].width - headerColumnWidthDiff);
         }
       }
 
@@ -1058,14 +1058,19 @@ if (typeof Slick === "undefined") {
     }
 
     function applyColumnWidths() {
-      var x = 0, w, rule;
-      for (var i = 0; i < columns.length; i++) {
-        w = columns[i].width;
-
-        $('.' + uid + ' .l' + i).css('left', x);
-        $('.' + uid + ' .r' + i).css('right', (canvasWidth - x - w));
-        x += columns[i].width;
-      }
+      var w, cells;
+      for (var l = 0; l < columns.length; l++) {
+        for (var r = 0; r < columns.length; r++) {
+          cells = $('.' + uid + ' .l' + l  + '.r' + r);
+          if(!cells.length) {
+            continue;
+          }
+          w = 0;
+          for(var c = l; c <= r; c++) {
+            w += columns[c].width;
+          }
+          cells.css('width', w - absoluteColumnMinWidth + 'px');
+        }
     }
 
     function setSortColumn(columnId, ascending) {
@@ -1355,7 +1360,7 @@ if (typeof Slick === "undefined") {
 
       stringArray.push("<div class='ui-widget-content " + rowCss + "' style='top:" + getRowTop(row) + "px; height:" + options.rowHeight + "px;'>");
 
-      var colspan, m, columnData, w, x = 0, cellStyle;
+      var colspan, m, columnData, w, cellStyle;
       for (var i = 0, ii = columns.length; i < ii; i++) {
         m = columns[i];
         if (metadata && metadata.columns) {
@@ -1368,18 +1373,9 @@ if (typeof Slick === "undefined") {
         for (var j = i; j <= i + colspan - 1; j++) {
           w += columns[j].width;
         }
-        cellStyle = 'left:' + x + 'px; right:' + (canvasWidth - x - w) + 'px; height:' + rowHeight + 'px;';
-        x += w;
+        cellStyle = 'width:' + (w - absoluteColumnMinWidth) + 'px;height:' + rowHeight + 'px';
 
-        // Do not render cells outside of the viewport.
-        if (columnPosRight[Math.min(ii - 1, i + colspan - 1)] > range.leftPx) {
-          if (columnPosLeft[i] > range.rightPx) {
-            // All columns to the right are outside the range.
-            break;
-          }
-
-          appendCellHtml(stringArray, row, i, colspan, columnData, d, cellStyle);
-        }
+        appendCellHtml(stringArray, row, i, colspan, columnData, d, cellStyle);
 
         if (colspan > 1) {
           i += (colspan - 1);
@@ -1716,12 +1712,6 @@ if (typeof Slick === "undefined") {
         i = i | 0;
 
         var colspan = cacheEntry.cellColSpans[i];
-        if (columnPosLeft[i] > range.rightPx ||
-          columnPosRight[Math.min(columns.length - 1, i + colspan - 1)] < range.leftPx) {
-          if (!(row == activeRow && i == activeCell)) {
-            cellsToRemove.push(i);
-          }
-        }
       }
 
       var cellToRemove;
@@ -1743,7 +1733,7 @@ if (typeof Slick === "undefined") {
       var cellsAdded;
       var totalCellsAdded = 0;
       var colspan;
-      var w, x, j, cellStyle, columnData;
+      var w, j, cellStyle, columnData;
       var rowHeight = (options.rowHeight - cellHeightDiff);
 
       for (var row = range.top, btm = range.bottom; row <= btm; row++) {
@@ -1765,20 +1755,11 @@ if (typeof Slick === "undefined") {
         var metadata = data.getItemMetadata && data.getItemMetadata(row, d);
         metadata = metadata && metadata.columns;
 
-        x = 0; // reset to 0 before looping the columns
         // TODO:  shorten this loop (index? heuristics? binary search?)
         for (var i = 0, ii = columns.length; i < ii; i++) {
-          // Cells to the right are outside the range.
-          if (columnPosLeft[i] > range.rightPx) {
-            break;
-          }
-
           // Already rendered.
           if ((colspan = cacheEntry.cellColSpans[i]) != null) {
             // Before continuing the loop, adjust the x value to make it ready for the next iteration.
-            for (j = i; j <= i + colspan - 1; j++) {
-              x += columns[j].width;
-            }
             i += (colspan > 1 ? colspan - 1 : 0);
             continue;
           }
@@ -1794,13 +1775,10 @@ if (typeof Slick === "undefined") {
             w += columns[j].width;
           }
 
-          cellStyle = 'left:' + x +'px; right:' + (canvasWidth - x - w) + 'px; height:' + rowHeight + 'px;';
-          x += w;
+          cellStyle = 'width:' + (w - absoluteColumnMinWidth) + 'px; height:' + rowHeight + 'px;';
 
-          if (columnPosRight[Math.min(ii - 1, i + colspan - 1)] > range.leftPx) {
-            appendCellHtml(stringArray, row, i, colspan, columnData, d, cellStyle);
-            cellsAdded++;
-          }
+          appendCellHtml(stringArray, row, i, colspan, columnData, d, cellStyle);
+          cellsAdded++;
 
           i += (colspan > 1 ? colspan - 1 : 0);
         }
