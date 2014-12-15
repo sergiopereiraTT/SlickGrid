@@ -1071,6 +1071,7 @@ if (typeof Slick === "undefined") {
           }
           cells.css('width', w - absoluteColumnMinWidth + 'px');
         }
+      }
     }
 
     function setSortColumn(columnId, ascending) {
