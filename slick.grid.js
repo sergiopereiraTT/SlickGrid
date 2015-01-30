@@ -545,6 +545,7 @@ if (typeof Slick === "undefined") {
             });
           }
         });
+      var prevLeftScroll = $headerScroller.scrollLeft();
       $headers.empty();
       $headers.width(getHeadersWidth());
 
@@ -606,6 +607,7 @@ if (typeof Slick === "undefined") {
       if (options.enableColumnReorder) {
         setupColumnReorder();
       }
+      $headerScroller.scrollLeft(prevLeftScroll);
     }
 
     function setupColumnSort() {
