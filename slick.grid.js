@@ -607,6 +607,8 @@ if (typeof Slick === "undefined") {
       if (options.enableColumnReorder) {
         setupColumnReorder();
       }
+      // In Firefox, the header row does not remember the h-scroll, and would always scroll to left-most.
+      // To get around that, manually scroll to the correct left position for the header row.
       $headerScroller.scrollLeft(prevLeftScroll);
     }
 
@@ -1565,7 +1567,7 @@ if (typeof Slick === "undefined") {
       if (h_render) {
         clearTimeout(h_render);
       }
-      h_render = setTimeout(render, 200);
+      h_render = setTimeout(render, 50);
     }
 
     function updateRowCount() {
