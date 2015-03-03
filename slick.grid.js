@@ -1563,11 +1563,7 @@ if (typeof Slick === "undefined") {
       handleScroll();
       // Since the width has changed, force the render() to reevaluate virtually rendered cells.
       lastRenderedScrollLeft = -1;
-      //render();
-      if (h_render) {
-        clearTimeout(h_render);
-      }
-      h_render = setTimeout(render, 50);
+      render();
     }
 
     function updateRowCount() {
