@@ -38,8 +38,13 @@
     }
 
     function handleDragInit(e, dd) {
+      var $canvas = $(_canvas);
       // prevent the grid from cancelling drag'n'drop by default
       e.stopImmediatePropagation();
+      // since event propagation is killed, fire "slick.cellrangerselector.mousedown"
+      // event, in case someone out there is interested in handling it.
+      $canvas.trigger("slick.cellrangerselector.mousedown");
+
     }
 
     function handleDragStart(e, dd) {
